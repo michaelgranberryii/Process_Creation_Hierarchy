@@ -1,6 +1,6 @@
 //Michael Granberry
 //COMP 322 - Spring 2023
-//Process Creation Hierarchy
+//Lab 1 - Process Creation Hierarchy
 
 #include <stdio.h>
 #include <stdlib.h>
