@@ -12,7 +12,6 @@ struct node {
     struct node *next;
 }; typedef struct node linked_list;
 
-
 struct pcb {
     int parent;
     linked_list *children;
@@ -29,23 +28,22 @@ void procedure_to_print_hierarchy_of_processes(void) {
     int i;
     linked_list* current_child;
     /* for each process index i from 0 up to (but not including) maximum number of processes*/
+    printf("Process List:\n");
     for (i=0; i< (MAX_PROCESSES); i++){
         /* if PCB[i] is not NULL */
         if (pcb_array[i] != NULL) {
             /* print process id, parent id, list of children processes */
-            printf("Process List:\n");
             printf("Process id: %d\n", i);
             printf("\tParent process id: %d\n", pcb_array[i]->parent);
             //children
             current_child = pcb_array[i]->children;
             while (current_child != NULL) {
-                printf("/tChild Process id: %d\n", current_child->id);
+                printf("\tChild Process id: %d\n", current_child->id);
                 current_child = current_child->next;
             } //while
         } //if
     } //for
 } /* end of procedure */
-
 
 /***************************************************************/
 void initialize_process_hierarchy(void) { // 1
@@ -69,13 +67,11 @@ void initialize_process_hierarchy(void) { // 1
     return;
 } /* end of procedure */
 
-
 /***************************************************************/
 void create_a_new_child_process() { // 2
     /* define local vars */
     int p;
     int q=1;
-
     /* prompt for parent process index p */
     printf("Enter parent index: ");
     scanf("%d", &p);
@@ -88,14 +84,13 @@ void create_a_new_child_process() { // 2
     /* search for first available index q without a parent in a while loop */
     while ((q < MAX_PROCESSES) && (pcb_array[q] != NULL)) {
         q++;
-
     }
     /* if maximum number of processes reached, print message of no more available PCBs */
     if (q == MAX_PROCESSES) {
         printf("Maximum number of processes reached");
     }
     /* allocate memory for new child process & linked list*/
-     /* s, initialize fields */
+    /* s, initialize fields */
     pcb_type *pcbPtr; // pcb_type pointer.
     pcbPtr = (pcb_type*)malloc(sizeof(pcb_type)*1); // allocating memory for one pcb_type.
     linked_list  *new_child_node;
@@ -105,13 +100,12 @@ void create_a_new_child_process() { // 2
     pcb_array[q] = pcbPtr; // pointing to first element in allocated memory
     pcb_array[q]->parent = p;
     pcb_array[q]->children = NULL;
-
     /* except: while (current_child-> next != NULL)*/
     if (pcb_array[p]->children == NULL) {
+        /* append the node containing the child's index q to the children linked list of PCB[p] */
+        pcb_array[p]->children = new_child_node;
         pcb_array[p]->children->id = q;
         pcb_array[p]->children->next = NULL;
-        /* append the node containing the child's index q to the children linked list of PCB[p] */
-        pcb_array[q]->children = new_child_node;
         /* print hierarchy of processes */
         procedure_to_print_hierarchy_of_processes();
         return;
@@ -122,16 +116,15 @@ void create_a_new_child_process() { // 2
             current_child = current_child->next;
         }
         // set id
-        current_child->next->id = q;
-        current_child->next->next = NULL;
         /* append the node containing the child's index q to the children linked list of PCB[p] */
         current_child->next = new_child_node;
+        current_child->next->id = q;
+        current_child->next->next = NULL;
         /* print hierarchy of processes */
         procedure_to_print_hierarchy_of_processes();
     }
     return;
 } /* end of procedure */
-
 
 /***************************************************************/
 void recursive_procedure_to_destroy_children_processes(linked_list *node) {
@@ -150,12 +143,11 @@ void recursive_procedure_to_destroy_children_processes(linked_list *node) {
     /* free memory of PCB[q] and set PCB[q] to NULL*/
     free(pcb_array[q]);
     pcb_array[q] = NULL;
-    /* free memory of paramter and set to NULL */
+    /* free memory of parameter and set to NULL */
    free(node);
    node = NULL;
    return;
 } /* end of procedure */
-
 
 /***************************************************************/
 void destroy_all_descendants_of_a_parent_process(void) { // 3
@@ -180,7 +172,6 @@ void destroy_all_descendants_of_a_parent_process(void) { // 3
     return;
 } /* end of procedure */
 
-
 /***************************************************************/
 void quit_program_and_free_memory(void) { // 4
     /* if PCB[0] is non-null) */
@@ -189,7 +180,6 @@ void quit_program_and_free_memory(void) { // 4
     /* free memory of all PCB's */
     return;
 } /* end of procedure */
-
 
 // Menu
 void menu(void) {
