@@ -34,11 +34,11 @@ void procedure_to_print_hierarchy_of_processes(void) {
         if (pcb_array[i] != NULL) {
             /* print process id, parent id, list of children processes */
             printf("Process id: %d\n", i);
-            printf("\tParent process id: %d\n", pcb_array[i]->parent);
+            printf("\tParent process: %d\n", pcb_array[i]->parent);
             //children
             current_child = pcb_array[i]->children;
             while (current_child != NULL) {
-                printf("\tChild Process id: %d\n", current_child->id);
+                printf("\tChild process: %d\n", current_child->id);
                 current_child = current_child->next;
             } //while
         } //if
@@ -73,7 +73,7 @@ void create_a_new_child_process() { // 2
     int p;
     int q=1;
     /* prompt for parent process index p */
-    printf("Enter parent index: ");
+    printf("Enter the parent process id: \n");
     scanf("%d", &p);
     pcb_type *parent = pcb_array[p];
     /* if PCB[p] is NULL, print message process does not exist, return */
@@ -156,7 +156,7 @@ void destroy_all_descendants_of_a_parent_process(void) { // 3
     /* define local vars */
     int p;
     int q=1;
-    printf("Enter parent index: ");
+    printf("Enter the parent process whose descendants are to be destroyed: ");
     scanf("%d", &p);
     pcb_type *parent = pcb_array[p];
     if (parent == NULL) {
@@ -175,9 +175,16 @@ void destroy_all_descendants_of_a_parent_process(void) { // 3
 /***************************************************************/
 void quit_program_and_free_memory(void) { // 4
     /* if PCB[0] is non-null) */
+    if (pcb_array[0] != NULL ) {
         /* if children of PCB[0] is not null */
-    /* call recursive procedure to destroy children of PCB[0] */
+        if (pcb_array[0]->children != NULL) {
+            /* call recursive procedure to destroy children of PCB[0] */
+            recursive_procedure_to_destroy_children_processes(pcb_array[0]->children);
+        }
+    }
     /* free memory of all PCB's */
+    free(pcb_array[0]);
+    printf("\nQuitting program...\n");
     return;
 } /* end of procedure */
 
@@ -185,7 +192,8 @@ void quit_program_and_free_memory(void) { // 4
 void menu(void) {
     int sel = -1;
     do {
-        printf("\n=============== MENU ===============\n");
+        printf("\nProcess creation and destruction\n");
+        printf("--------------------------------\n");
         printf("1) Initialize process hierarchy.\n");
         printf("2) Create a new child process.\n");
         printf("3) Destroy all descendants of a parent process.\n");
@@ -195,28 +203,27 @@ void menu(void) {
         scanf("%d", &sel);
         switch (sel) {
             case 1:
-                printf("1) Initialize process hierarchy.\n");
-                printf("\nEnter selection: %d\n", sel);
+                printf("\n\nEnter selection: %d\n", sel);
                 //func
                 initialize_process_hierarchy();
                 break;
             case 2:
-                printf("2) Create a new child process.\n");
+                printf("\n\nEnter selection: %d\n", sel);
                 //func
                 create_a_new_child_process();
                 break;
             case 3:
-                printf("3) Destroy all descendants of a parent process.\n");
+                printf("\n\nEnter selection: %d\n", sel);
                 //func
                 destroy_all_descendants_of_a_parent_process();
                 break;
             case 4:
-                printf("4) Quit program and free memory.\n");
+                printf("\n\nEnter selection: %d\n", sel);
                 //func
                 quit_program_and_free_memory();
                 break;
             default:
-                printf("Invalid Choice.\n");
+                printf("\n\nInvalid Choice.\n");
         }
     } while (sel != 4);
 }
